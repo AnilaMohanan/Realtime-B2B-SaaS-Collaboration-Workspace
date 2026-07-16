@@ -1,9 +1,10 @@
 
 //import './App.css'
-import WorkspacePage from "./pages/Workspace";
+//import WorkspacePage from "./pages/Workspace";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  return <WorkspacePage />;
+   return <Dashboard/>
 }
 
 
