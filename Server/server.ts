@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import workspaceRoutes from "./routes/workspace.routes";
+import channelRoutes from "./routes/channel.routes";
 import cors from "cors";
 
 const app = express();
@@ -20,6 +21,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/workspaces", workspaceRoutes);
+app.use("/api/channels", channelRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");

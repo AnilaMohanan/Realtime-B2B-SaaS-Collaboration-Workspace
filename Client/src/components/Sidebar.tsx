@@ -5,7 +5,7 @@ import {
     FaFileAlt,
     FaCog
 } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 const Sidebar = () => {
 
     return (
@@ -40,9 +40,12 @@ const Sidebar = () => {
 
                     <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
 
-                        <FaComments />
-
-                        Channels
+                        <Link to="/channels">
+  <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
+    <FaComments />
+    Channels
+  </li>
+</Link>
 
                     </li>
 
