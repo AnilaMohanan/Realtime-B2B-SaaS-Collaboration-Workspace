@@ -3,6 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import authroutes from "./routes/authroutes";
+import workspaceRoutes from "./routes/workspaceroutes";
+import userRoutes from "./routes/userRoutes";
 
 const app = express();
 
@@ -11,6 +14,9 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api/auth",authroutes);
+app.use("/api/workspace", workspaceRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (_req, res) => {
   res.status(200).json({
