@@ -1,4 +1,4 @@
-import "./Channel.css";
+import "../pages/Channel.css";
 
 function ChannelCard(){
 
