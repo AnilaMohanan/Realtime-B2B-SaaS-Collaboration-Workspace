@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import "./Channel.css";
+import "./styles/Channelstyles.css";
+import {useEffect, useState } from "react";
+
 import ChannelCard from "../components/ChannelCard";
 
 function Channel() {
