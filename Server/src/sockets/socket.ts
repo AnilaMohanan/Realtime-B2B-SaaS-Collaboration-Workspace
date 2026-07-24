@@ -44,6 +44,18 @@ export const initializeSocket = (io: Server) => {
       }
     });
 
+    //Typing
+
+    socket.on("typing", (roomId: string) => {
+  console.log("Typing event received:", roomId);
+  socket.to(roomId).emit("typing");
+});
+// stop typing
+   socket.on("stopTyping", (roomId: string) => {
+  console.log("Stop typing event received:", roomId);
+  socket.to(roomId).emit("stopTyping");
+});
+
     // Disconnect
     socket.on("disconnect", () => {
       console.log("User Disconnected:", socket.id);
