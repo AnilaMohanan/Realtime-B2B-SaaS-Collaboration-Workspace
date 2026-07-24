@@ -8,6 +8,7 @@ import workspaceRoutes from "./routes/workspaceroutes";
 import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messageroutes";
 import notificationRoutes from "./routes/notificationroutes";
+import dashboardRoutes from "./routes/dashboardroutes";
 
 const app = express();
 
@@ -16,11 +17,13 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
+
 app.use("/api/auth",authroutes);
-app.use("/api/workspace", workspaceRoutes);
+app.use("/api/workspaces", workspaceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (_req, res) => {
   res.status(200).json({
