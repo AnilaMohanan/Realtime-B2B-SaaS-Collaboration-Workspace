@@ -1,4 +1,4 @@
-import "./styles/Channelstyles.css";
+
 import {useEffect, useState } from "react";
 
 import ChannelCard from "../components/ChannelCard";

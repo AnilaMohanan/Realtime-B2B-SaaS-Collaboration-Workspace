@@ -1,34 +1,41 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IWorkspace extends Document {
-  name: string;
-  description?: string;
-  owner: mongoose.Types.ObjectId;
-  members: mongoose.Types.ObjectId[];
+  workspaceName: string;
+  description: string;
+  ownerId: mongoose.Types.ObjectId;
+  inviteCode: string;
+  isPrivate: boolean;
 }
 
-const WorkspaceSchema = new Schema<IWorkspace>(
+const WorkspaceSchema = new Schema(
   {
-    name: {
+    workspaceName: {
       type: String,
       required: true,
       trim: true,
     },
+
     description: {
       type: String,
       default: "",
     },
-    owner: {
+
+    ownerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    members: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+
+    inviteCode: {
+      type: String,
+      required: true,
+    },
+
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

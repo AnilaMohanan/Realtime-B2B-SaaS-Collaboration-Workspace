@@ -8,4 +8,5 @@ export const createWorkspace = (data: any) => API.post("/", data);
 export const updateWorkspace = (id: string, data: any) =>
   API.put(`/${id}`, data);
 export const deleteWorkspace = (id: string) => API.delete(`/${id}`);
+
 export default API;

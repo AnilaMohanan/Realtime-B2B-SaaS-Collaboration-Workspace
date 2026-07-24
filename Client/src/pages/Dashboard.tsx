@@ -1,59 +1,95 @@
 import DashboardLayout from "../layouts/DashboardLayout";
 import StatsCard from "../components/StatsCard";
 import WorkspaceCard from "../components/WorkspaceCard";
-import { useEffect, useState } from "react";
-import { getAllWorkspaces } from "../services/workspaceApi";
 import WorkspaceModal from "../components/WorkspaceModal";
+
+import { useEffect, useState } from "react";
+
 import {
   FaUsers,
   FaBuilding,
-  FaComments
+  FaComments,
 } from "react-icons/fa";
+
+import {
+  getAllWorkspaces,
+} from "../services/workspaceApi";
+
+import { getDashboardStats } from "../services/getdashboardstatusApi";
 
 import type { Workspace } from "../types/workspace";
 
-
 const Dashboard = () => {
-const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
-const [loading, setLoading] = useState(true);
-const [open, setOpen] = useState(false);
-const [search, setSearch] = useState("");
 
-const filtered = workspaces.filter((workspace) =>
-  workspace.workspaceName
-    .toLowerCase()
-    .includes(search.toLowerCase())
-);
-    const fetchWorkspaces = async () => {
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  try {
+  const [open, setOpen] = useState(false);
 
-    setLoading(true);
+  const [search, setSearch] = useState("");
 
-    const res = await getAllWorkspaces();
+  const [stats, setStats] = useState({
+    totalWorkspaces: 0,
+    totalMembers: 0,
+    totalChannels: 0,
+  });
 
-    setWorkspaces(res.data.data);
+  const filtered = workspaces.filter((workspace) =>
+    workspace.workspaceName
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
 
-  } catch (err) {
+  const fetchWorkspaces = async () => {
+    try {
 
-    console.log(err);
+      setLoading(true);
 
-  } finally {
+      const res = await getAllWorkspaces();
 
-    setLoading(false);
+      setWorkspaces(res.data.data);
 
-  }
+    } catch (err) {
 
-};
-useEffect(() => {
+      console.log(err);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
+
+  const fetchDashboardStats = async () => {
+
+    try {
+
+      const res = await getDashboardStats();
+
+      setStats(res.data.data);
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+
+  };
+
+  useEffect(() => {
 
     fetchWorkspaces();
 
-}, []);
+    fetchDashboardStats();
+
+  }, []);
 
   return (
-    
-    <DashboardLayout  search={search} setSearch={setSearch}>
+
+    <DashboardLayout
+      search={search}
+      setSearch={setSearch}
+    >
 
       <div className="flex justify-between items-center">
 
@@ -69,42 +105,44 @@ useEffect(() => {
 
         </div>
 
-<button
-    onClick={() => setOpen(true)}
-    className="bg-blue-600 text-white px-6 py-3 rounded-lg"
->
-    + Create Workspace
-  
-</button>
-  {
-    open &&
+        <button
+          onClick={() => setOpen(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+        >
+          + Create Workspace
+        </button>
 
-    <WorkspaceModal
-        fetchWorkspaces={fetchWorkspaces}
-        onClose={() => setOpen(false)}
-    />
-}
       </div>
+
+      {open && (
+        <WorkspaceModal
+          fetchWorkspaces={() => {
+            fetchWorkspaces();
+            fetchDashboardStats();
+          }}
+          onClose={() => setOpen(false)}
+        />
+      )}
 
       <div className="grid grid-cols-3 gap-6 mt-10">
 
         <StatsCard
           title="Total Workspaces"
-          value={18}
+          value={stats.totalWorkspaces}
           icon={<FaBuilding />}
           color="bg-blue-500"
         />
 
         <StatsCard
           title="Members"
-          value={145}
+          value={stats.totalMembers}
           icon={<FaUsers />}
           color="bg-green-500"
         />
 
         <StatsCard
           title="Channels"
-          value={52}
+          value={stats.totalChannels}
           icon={<FaComments />}
           color="bg-purple-500"
         />
@@ -112,23 +150,44 @@ useEffect(() => {
       </div>
 
       <h2 className="text-2xl font-bold mt-12 mb-6">
+
         Workspaces
+
       </h2>
 
-      <div className="grid grid-cols-3 gap-6">
+      {loading ? (
 
-        {filtered.map((workspace) => (
-          <WorkspaceCard
-            key={workspace._id}
-    workspace={workspace}
-    fetchWorkspaces={fetchWorkspaces}
-          />
-        ))}
+        <div className="text-center text-xl mt-10">
 
-      </div>
+          Loading...
+
+        </div>
+
+      ) : (
+
+        <div className="grid grid-cols-3 gap-6">
+
+          {filtered.map((workspace) => (
+
+            <WorkspaceCard
+              key={workspace._id}
+              workspace={workspace}
+              fetchWorkspaces={() => {
+                fetchWorkspaces();
+                fetchDashboardStats();
+              }}
+            />
+
+          ))}
+
+        </div>
+
+      )}
 
     </DashboardLayout>
+
   );
+
 };
 
 export default Dashboard;

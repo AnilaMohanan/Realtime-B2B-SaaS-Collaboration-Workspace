@@ -8,8 +8,9 @@ import {
 
 import type { Workspace } from "../types/workspace";
 import { deleteWorkspace } from "../services/workspaceApi";
-
-
+import DeleteWorkspaceModal from "./DeleteWorkspaceModal";
+import { useState } from "react";
+import WorkspaceModal from "./WorkspaceModal";
 
 interface Props {
   workspace: Workspace;
@@ -21,6 +22,8 @@ interface Props {
 
 
 const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
+  const [showDelete, setShowDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const removeWorkspace = async () => {
   if (!workspace._id) return;
 
@@ -84,20 +87,45 @@ const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
 
         <div className="flex gap-4">
 
-          <button>
+<button onClick={() => setOpenEdit(true)}>
+  <FaEdit className="text-yellow-500 text-lg" />
+</button>
 
-            <FaEdit className="text-yellow-500" />
-
-          </button>
-
-        <button onClick={removeWorkspace}>
-    <FaTrash className="text-red-500" />
+  <button
+  onClick={() => setShowDelete(true)}
+  className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg"
+>
+  <FaTrash className="text-white" />
 </button>
 
         </div>
 
       </div>
+      
+{
+  showDelete && (
 
+    <DeleteWorkspaceModal
+
+      workspaceName={workspace.workspaceName}
+
+      onConfirm={removeWorkspace}
+
+      onCancel={() => setShowDelete(false)}
+
+    />
+
+  )
+}
+{
+  openEdit && (
+    <WorkspaceModal
+      workspace={workspace}
+      fetchWorkspaces={fetchWorkspaces}
+      onClose={() => setOpenEdit(false)}
+    />
+  )
+}
     </div>
   );
 };

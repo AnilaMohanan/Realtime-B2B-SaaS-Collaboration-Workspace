@@ -1,20 +1,23 @@
 import { useState } from "react";
-import { createWorkspace } from "../services/workspaceApi";
+import { createWorkspace ,updateWorkspace,} from "../services/workspaceApi";
 
 interface Props {
   fetchWorkspaces: () => void;
   onClose: () => void;
+   workspace?: any;
 }
 
-const WorkspaceModal = ({ fetchWorkspaces, onClose }: Props) => {
+const WorkspaceModal = ({ fetchWorkspaces, onClose, workspace, }: Props) => {
 
-  const [formData, setFormData] = useState({
-    workspaceName: "",
-    description: "",
-    ownerId: "",
-    inviteCode: "",
-    isPrivate: false,
-  });
+const [formData, setFormData] = useState({
+  workspaceName: workspace?.workspaceName || "",
+  description: workspace?.description || "",
+  inviteCode: workspace?.inviteCode || "",
+  isPrivate: workspace?.isPrivate || false,
+});
+
+  // Get logged in user
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,18 +34,33 @@ const WorkspaceModal = ({ fetchWorkspaces, onClose }: Props) => {
     });
   };
 
-  const submit = async () => {
+const submit = async () => {
   try {
-    await createWorkspace(formData);
 
-    alert("✅ Workspace created successfully!");
+    if (workspace?._id) {
+
+      await updateWorkspace(workspace._id, formData);
+
+      alert("Workspace updated successfully!");
+
+    } else {
+
+      await createWorkspace(formData);
+
+      alert("Workspace created successfully!");
+
+    }
 
     fetchWorkspaces();
 
     onClose();
+
   } catch (error) {
+
     console.error(error);
-    alert("❌ Failed to create workspace.");
+
+    alert("Operation failed.");
+
   }
 };
 
@@ -50,13 +68,11 @@ const WorkspaceModal = ({ fetchWorkspaces, onClose }: Props) => {
 
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
 
-      <div className="bg-white rounded-xl p-8 w-[500px]">
+      <div className="bg-white rounded-xl p-8 w-[500px] shadow-xl">
 
-        <h2 className="text-2xl font-bold mb-6">
-
-          Create Workspace
-
-        </h2>
+       <h2 className="text-2xl font-bold mb-6 text-center">
+  {workspace ? "Edit Workspace" : "Create Workspace"}
+</h2>
 
         <input
           className="border w-full p-3 rounded mb-4"
@@ -71,14 +87,6 @@ const WorkspaceModal = ({ fetchWorkspaces, onClose }: Props) => {
           placeholder="Description"
           name="description"
           value={formData.description}
-          onChange={handleChange}
-        />
-
-        <input
-          className="border w-full p-3 rounded mb-4"
-          placeholder="Owner Id"
-          name="ownerId"
-          value={formData.ownerId}
           onChange={handleChange}
         />
 
@@ -107,17 +115,17 @@ const WorkspaceModal = ({ fetchWorkspaces, onClose }: Props) => {
 
           <button
             onClick={onClose}
-            className="border px-4 py-2 rounded"
+            className="border border-gray-400 px-5 py-2 rounded-lg hover:bg-gray-100"
           >
             Cancel
           </button>
 
-          <button
-            onClick={submit}
-            className="bg-blue-600 text-white px-5 py-2 rounded"
-          >
-            Create
-          </button>
+      <button
+  onClick={submit}
+  className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
+>
+  {workspace ? "Update Workspace" : "Create Workspace"}
+</button>
 
         </div>
 
