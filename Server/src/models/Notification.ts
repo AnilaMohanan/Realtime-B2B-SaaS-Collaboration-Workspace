@@ -1,23 +1,23 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface IMessage extends Document {
-  sender: mongoose.Types.ObjectId;
-  receiver: mongoose.Types.ObjectId;
+export interface INotification extends Document {
+  user: mongoose.Types.ObjectId;
+  title: string;
   message: string;
   isRead: boolean;
 }
 
-const messageSchema = new Schema<IMessage>(
+const notificationSchema = new Schema<INotification>(
   {
-    sender: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    receiver: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    title: {
+      type: String,
       required: true,
+      trim: true,
     },
     message: {
       type: String,
@@ -34,4 +34,7 @@ const messageSchema = new Schema<IMessage>(
   }
 );
 
-export default mongoose.model<IMessage>("Message", messageSchema);
+export default mongoose.model<INotification>(
+  "Notification",
+  notificationSchema
+);
