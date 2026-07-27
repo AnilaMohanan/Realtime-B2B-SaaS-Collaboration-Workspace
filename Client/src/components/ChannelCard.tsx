@@ -1,83 +1,91 @@
+import { deleteChannel } from "../services/channelApi";
+import { useNavigate } from "react-router-dom";
 
+interface ChannelCardProps {
+  channel: any;
+  fetchChannels: () => void;
+  onEdit: (channel: any) => void;
+}
 
-function ChannelCard(){
+function ChannelCard({
+  channel,
+  fetchChannels,
+  onEdit,
+}: ChannelCardProps) {
+  const navigate = useNavigate();
 
-return(
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this channel?"
+    );
 
-<div className="channel-card">
+    if (!confirmDelete) return;
 
-<div className="channel-title">
+    try {
+      await deleteChannel(channel._id);
+      alert("Channel deleted successfully!");
+      fetchChannels();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete channel.");
+    }
+  };
 
-<h2>Backend Team</h2>
+  const handleOpen = () => {
+    navigate(`/chat/${channel._id}`);
+  };
+  return (
+    <div className="bg-white rounded-xl shadow-md p-5 border hover:shadow-lg transition mb-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-bold">
+          {channel.channelName}
+        </h2>
 
-<span className="private">
+        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+          Private
+        </span>
+      </div>
 
-Private
+      <p className="text-gray-600 mt-3">
+        {channel.description}
+      </p>
 
-</span>
+      <div className="mt-4 text-sm text-gray-500">
+        <p>
+          <strong>Workspace:</strong>{" "}
+          {channel.workspaceId?.name || "N/A"}
+        </p>
 
-</div>
+        <p className="mt-1">
+          <strong>Created By:</strong>{" "}
+          {channel.createdBy?.name || "Unknown"}
+        </p>
+      </div>
 
-<p>
+      <div className="flex gap-3 mt-5">
+        <button
+          onClick={handleOpen}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Open
+        </button>
 
-Discussion for Backend Developers
+        <button
+          onClick={() => onEdit(channel)}
+          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
+        >
+          Edit
+        </button>
 
-</p>
-
-<div className="channel-details">
-
-<p>
-
-Workspace
-
-<strong>
-
-Backend Workspace
-
-</strong>
-
-</p>
-
-<p>
-
-Created By
-
-<strong>
-
-Anila
-
-</strong>
-
-</p>
-
-</div>
-
-<div className="buttons">
-
-<button className="open">
-
-Open
-
-</button>
-
-<button className="edit">
-
-Edit
-
-</button>
-
-<button className="delete">
-
-Delete
-
-</button>
-
-</div>
-
-</div>
-
-)
-
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default ChannelCard;

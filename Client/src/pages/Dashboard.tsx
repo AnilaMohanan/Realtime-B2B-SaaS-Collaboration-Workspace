@@ -34,31 +34,28 @@ const Dashboard = () => {
     totalChannels: 0,
   });
 
-  const filtered = workspaces.filter((workspace) =>
-    workspace.workspaceName
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+  const filtered = workspaces.filter((workspace) => {
+  const workspaceName = workspace.workspaceName || "";
 
+  return workspaceName
+    .toLowerCase()
+    .includes(search.toLowerCase());
+});
   const fetchWorkspaces = async () => {
-    try {
+  try {
+    setLoading(true);
 
-      setLoading(true);
+    const res = await getAllWorkspaces();
 
-      const res = await getAllWorkspaces();
+    console.log("Workspaces:", res.data.data);
 
-      setWorkspaces(res.data.data);
-
-    } catch (err) {
-
-      console.log(err);
-
-    } finally {
-
-      setLoading(false);
-
-    }
-  };
+    setWorkspaces(res.data.data);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchDashboardStats = async () => {
 

@@ -1,56 +1,83 @@
-
-import {useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
+import ChannelModal from "../components/ChannelModal";
 import ChannelCard from "../components/ChannelCard";
+import { getAllChannels } from "../services/channelApi";
 
 function Channel() {
-const Channel = () => {
-  return <h1>Channel Page</h1>;
-};
-const [channels,setChannels]=useState([]);
+  const [channels, setChannels] = useState<any[]>([]);
+  const [openModal, setOpenModal] = useState(false);
 
-return(
+  const [editingChannel, setEditingChannel] = useState<any>(null);
+  const [isEdit, setIsEdit] = useState(false);
 
-<div className="channel-page">
+  useEffect(() => {
+    fetchChannels();
+  }, []);
 
-<div className="channel-header">
+  const fetchChannels = async () => {
+    try {
+      const response = await getAllChannels();
+      setChannels(response.data);
+    } catch (error) {
+      console.error("Error fetching channels:", error);
+    }
+  };
 
-<h1>Channels</h1>
+  return (
+    <div className="channel-page">
+      <div className="channel-header">
+        <h1>Channels</h1>
 
-<button>
+        <button
+          onClick={() => {
+            setEditingChannel(null);
+            setIsEdit(false);
+            setOpenModal(true);
+          }}
+        >
+          + Create Channel
+        </button>
+      </div>
 
-+ Create Channel
+      <div className="search-bar">
+        <input type="text" placeholder="Search Channel" />
+      </div>
 
-</button>
+      <div className="channel-list">
+        {channels.length > 0 ? (
+          channels.map((channel: any) => (
+            <ChannelCard
+              key={channel._id}
+              channel={channel}
+              fetchChannels={fetchChannels}
+              onEdit={(channel) => {
+                setEditingChannel(channel);
+                setIsEdit(true);
+                setOpenModal(true);
+              }}
+            />
+          ))
+        ) : (
+          <p>No channels found.</p>
+        )}
+      </div>
 
-</div>
-
-<div className="search-bar">
-
-<input
-
-type="text"
-
-placeholder="Search Channel"
-
-/>
-
-</div>
-
-<div className="channel-list">
-
-<ChannelCard/>
-
-<ChannelCard/>
-
-<ChannelCard/>
-
-</div>
-
-</div>
-
-)
-
+      {openModal && (
+        <ChannelModal
+          workspaceId="6a59ab571683809afc858562"
+          createdBy={JSON.parse(localStorage.getItem("user") || "{}")._id}
+          fetchChannels={fetchChannels}
+          onClose={() => {
+            setOpenModal(false);
+            setEditingChannel(null);
+            setIsEdit(false);
+          }}
+          channel={editingChannel}
+          isEdit={isEdit}
+        />
+      )}
+    </div>
+  );
 }
 
 export default Channel;

@@ -6,11 +6,13 @@ import {
   FaArrowRight
 } from "react-icons/fa";
 
+
 import type { Workspace } from "../types/workspace";
 import { deleteWorkspace } from "../services/workspaceApi";
 import DeleteWorkspaceModal from "./DeleteWorkspaceModal";
 import { useState } from "react";
 import WorkspaceModal from "./WorkspaceModal";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   workspace: Workspace;
@@ -24,6 +26,8 @@ interface Props {
 const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
   const [showDelete, setShowDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const navigate = useNavigate();
+
   const removeWorkspace = async () => {
   if (!workspace._id) return;
 
@@ -77,13 +81,13 @@ const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
 
       <div className="flex justify-between mt-6">
 
-        <button className="text-blue-600 flex items-center gap-2">
-
-          <FaArrowRight />
-
-          Open
-
-        </button>
+      <button
+  onClick={() => navigate("/chat")}
+  className="text-blue-600 flex items-center gap-2"
+>
+  <FaArrowRight />
+  Open
+</button>
 
         <div className="flex gap-4">
 

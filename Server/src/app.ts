@@ -9,6 +9,8 @@ import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messageroutes";
 import notificationRoutes from "./routes/notificationroutes";
 import dashboardRoutes from "./routes/dashboardroutes";
+import channelRoutes from "./routes/channelroutes";
+
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(cookieParser());
 
 app.use("/api/auth",authroutes);
 app.use("/api/workspaces", workspaceRoutes);
+app.use("/api/channels", channelRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
