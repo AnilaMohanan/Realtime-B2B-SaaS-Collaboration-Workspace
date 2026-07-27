@@ -1,56 +1,49 @@
-
-import {useEffect, useState } from "react";
-
+import { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 import ChannelCard from "../components/ChannelCard";
+import "../styles/Channel.css";
 
 function Channel() {
-const Channel = () => {
-  return <h1>Channel Page</h1>;
-};
-const [channels,setChannels]=useState([]);
+  const [search, setSearch] = useState("");
 
-return(
+  return (
+    <div className="dashboard-container">
+      <Sidebar />
 
-<div className="channel-page">
+      <div className="main-content">
+        <Navbar  title="Channels"
+          search={search}
+          setSearch={setSearch}
+          placeholder="Search channels..."/>
 
-<div className="channel-header">
+        <div className="channel-page">
+          <div className="channel-header">
+            <h2>Channels</h2>
 
-<h1>Channels</h1>
+            <button className="create-btn">
+              + Create Channel
+            </button>
+          </div>
 
-<button>
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search channels..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-+ Create Channel
-
-</button>
-
-</div>
-
-<div className="search-bar">
-
-<input
-
-type="text"
-
-placeholder="Search Channel"
-
-/>
-
-</div>
-
-<div className="channel-list">
-
-<ChannelCard/>
-
-<ChannelCard/>
-
-<ChannelCard/>
-
-</div>
-
-</div>
-
-)
-
+          <div className="channel-list">
+            <ChannelCard />
+            <ChannelCard />
+            <ChannelCard />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Channel;

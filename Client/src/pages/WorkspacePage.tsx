@@ -19,7 +19,7 @@ import { getDashboardStats } from "../services/getdashboardstatusApi";
 
 import type { Workspace } from "../types/workspace";
 
-const Dashboard = () => {
+const WorkspacePage = () => {
 
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,7 +96,7 @@ const Dashboard = () => {
         <div>
 
           <h1 className="text-4xl font-bold">
-            Workspace Dashboard
+            Workspace Dashboard 
           </h1>
 
           <p className="text-gray-500 mt-2">
@@ -190,4 +190,4 @@ const Dashboard = () => {
 
 };
 
-export default Dashboard;
+export default WorkspacePage;

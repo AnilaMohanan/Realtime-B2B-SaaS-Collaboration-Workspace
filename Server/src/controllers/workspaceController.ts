@@ -4,6 +4,7 @@ import Workspace from "../models/Workspace";
 // Create Workspace
 export const createWorkspace = async (req: Request, res: Response) => {
   try {
+    console.log("Request Body:", req.body);
     const workspace = await Workspace.create(req.body);
 
     res.status(201).json({
@@ -11,13 +12,14 @@ export const createWorkspace = async (req: Request, res: Response) => {
       message: "Workspace created successfully",
       data: workspace,
     });
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+  console.error("Create Workspace Error:", error);
 
-    res.status(500).json({
-      success: false,
-      message: "Server Error",
-    });
+  res.status(500).json({
+    success: false,
+    message: error.message,
+    error,
+  });
   }
 };
 

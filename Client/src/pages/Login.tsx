@@ -29,6 +29,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
+      
       setLoading(true);
 
       const res = await loginUser(login);
@@ -45,7 +46,7 @@ const Login = () => {
 
       alert("Login Successful");
 
-      navigate("/dashboard");
+      navigate("/workspaces");
 
     } catch (err: any) {
 

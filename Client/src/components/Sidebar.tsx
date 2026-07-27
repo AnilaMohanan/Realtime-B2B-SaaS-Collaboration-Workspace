@@ -1,78 +1,70 @@
 import {
-    FaHome,
-    FaUsers,
-    FaComments,
-    FaFileAlt,
-    FaCog
+  FaHome,
+  FaUsers,
+  FaComments,
+  FaFileAlt,
+  FaCog,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 const Sidebar = () => {
+  const location = useLocation();
 
-    return (
+  const menuItems = [
+    {
+      name: "Dashboard",
+      icon: <FaHome />,
+      path: "/dashboard",
+    },
+    {
+      name: "Workspaces",
+      icon: <FaUsers />,
+      path: "/workspaces",
+    },
+    {
+      name: "Channels",
+      icon: <FaComments />,
+      path: "/channels",
+    },
+    {
+      name: "Documents",
+      icon: <FaFileAlt />,
+      path: "/documents",
+    },
+    {
+      name: "Settings",
+      icon: <FaCog />,
+      path: "/settings",
+    },
+  ];
 
-        <div className="w-64 h-screen bg-slate-900 text-white fixed">
+  return (
+    <aside className="w-64 h-screen bg-slate-900 text-white fixed left-0 top-0">
+      <div className="text-2xl font-bold p-6 border-b border-slate-700">
+        TeamSync
+      </div>
 
-            <div className="text-2xl font-bold p-6">
-
-                TeamSync
-
-            </div>
-
-            <nav className="mt-6">
-
-                <ul>
-
-                    <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-
-                        <FaHome />
-
-                        Dashboard
-
-                    </li>
-
-                    <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-
-                        <FaUsers />
-
-                        Workspaces
-
-                    </li>
-
-                    <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-
-                        <Link to="/channels">
-  <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-    <FaComments />
-    Channels
-  </li>
-</Link>
-
-                    </li>
-
-                    <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-
-                        <FaFileAlt />
-
-                        Documents
-
-                    </li>
-
-                    <li className="flex items-center gap-3 p-4 hover:bg-slate-700 cursor-pointer">
-
-                        <FaCog />
-
-                        Settings
-
-                    </li>
-
-                </ul>
-
-            </nav>
-
-        </div>
-
-    );
-
+      <nav className="mt-4">
+        <ul>
+          {menuItems.map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={`flex items-center gap-3 px-6 py-4 transition-colors ${
+                  location.pathname === item.path
+                    ? "bg-slate-700"
+                    : "hover:bg-slate-800"
+                }`}
+              >
+                {item.icon}
+                <span>{item.name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
 };
 
 export default Sidebar;

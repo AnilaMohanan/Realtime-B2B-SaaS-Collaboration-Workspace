@@ -1,0 +1,24 @@
+.channel-page {
+  padding: 20px;
+}
+
+.channel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+}
+
+.channel-list {
+  display: grid;
+  gap: 20px;
+}

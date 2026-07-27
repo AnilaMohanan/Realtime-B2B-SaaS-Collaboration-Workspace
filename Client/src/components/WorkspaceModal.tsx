@@ -36,31 +36,26 @@ const [formData, setFormData] = useState({
 
 const submit = async () => {
   try {
+    const payload = {
+      ...formData,
+      ownerId: user._id,
+    };
+
+    console.log("Sending Payload:", payload);
 
     if (workspace?._id) {
-
-      await updateWorkspace(workspace._id, formData);
-
+      await updateWorkspace(workspace._id, payload);
       alert("Workspace updated successfully!");
-
     } else {
-
-      await createWorkspace(formData);
-
+      await createWorkspace(payload);
       alert("Workspace created successfully!");
-
     }
 
     fetchWorkspaces();
-
     onClose();
-
   } catch (error) {
-
     console.error(error);
-
     alert("Operation failed.");
-
   }
 };
 
