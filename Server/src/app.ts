@@ -9,7 +9,8 @@ import userRoutes from "./routes/userRoutes";
 import messageRoutes from "./routes/messageroutes";
 import notificationRoutes from "./routes/notificationroutes";
 import dashboardRoutes from "./routes/dashboardroutes";
-
+import channelRoutes from "./routes/channelroutes";
+import workspaceMemberRoutes from "./routes/workspaceMemberRoutes";
 const app = express();
 
 app.use(cors());
@@ -24,6 +25,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/channels", channelRoutes);
+app.use("/api/workspace-members",workspaceMemberRoutes);
 
 app.get("/", (_req, res) => {
   res.status(200).json({

@@ -6,6 +6,8 @@ interface Props{
     children:React.ReactNode;
 search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
+  title?: string;
+  placeholder?: string;
 }
 
 const DashboardLayout=({children}:Props)=>{
@@ -18,7 +20,7 @@ const DashboardLayout=({children}:Props)=>{
 
             <div className="ml-64">
 
-                <Navbar/>
+                <Navbar />
 
                 <div className="p-8">
 

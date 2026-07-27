@@ -3,41 +3,36 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IWorkspaceMember extends Document {
   workspaceId: mongoose.Types.ObjectId;
   userId: mongoose.Types.ObjectId;
-  role: string;
+  role: "Admin" | "Member";
   joinedAt: Date;
 }
 
-const workspaceMemberSchema = new Schema<IWorkspaceMember>(
-  {
-    workspaceId: {
-      type: Schema.Types.ObjectId,
-      ref: "Workspace",
-      required: true,
-    },
-
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-
-    role: {
-      type: String,
-      enum: ["Admin", "Member"],
-      default: "Member",
-    },
-
-    joinedAt: {
-      type: Date,
-      default: Date.now,
-    },
+const WorkspaceMemberSchema = new Schema<IWorkspaceMember>({
+  workspaceId: {
+    type: Schema.Types.ObjectId,
+    ref: "Workspace",
+    required: true,
   },
-  {
-    timestamps: false,
-  }
-);
+
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+
+  role: {
+    type: String,
+    enum: ["Admin", "Member"],
+    default: "Member",
+  },
+
+  joinedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 export default mongoose.model<IWorkspaceMember>(
   "WorkspaceMember",
-  workspaceMemberSchema
+  WorkspaceMemberSchema
 );

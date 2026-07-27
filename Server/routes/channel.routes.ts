@@ -6,7 +6,7 @@ import {
   getChannelById,
   updateChannel,
   deleteChannel,
-} from "../controllers/channel.controller";
+} from "./C";
 
 const router = express.Router();
 

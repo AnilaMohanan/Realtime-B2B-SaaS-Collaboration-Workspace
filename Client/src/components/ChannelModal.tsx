@@ -1,96 +1,235 @@
-import { useState } from "react";
-import { createChannel } from "../services/channelApi";
+import { useEffect, useState } from "react";
+
+import {
+  createChannel,
+  updateChannel,
+} from "../services/channelApi";
+
+import { getAllWorkspaces } from "../services/workspaceApi";
 
 interface Props {
-  workspaceId: string;
-  createdBy: string;
   fetchChannels: () => void;
   onClose: () => void;
+  channel?: any;
 }
 
 const ChannelModal = ({
-  workspaceId,
-  createdBy,
   fetchChannels,
   onClose,
+  channel,
 }: Props) => {
-  const [channelName, setChannelName] = useState("");
-  const [description, setDescription] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const user = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  );
+
+  const [workspaces, setWorkspaces] = useState<any[]>([]);
+
+  const [formData, setFormData] = useState({
+    workspaceId: channel?.workspaceId?._id || "",
+    channelName: channel?.channelName || "",
+    description: channel?.description || "",
+  });
+
+  useEffect(() => {
+    fetchWorkspaces();
+  }, []);
+
+  const fetchWorkspaces = async () => {
+    try {
+
+      const res = await getAllWorkspaces();
+
+      setWorkspaces(res.data.data);
+
+    } catch (err) {
+
+      console.log(err);
+
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement |
+      HTMLTextAreaElement |
+      HTMLSelectElement
+    >
+  ) => {
+
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+
+  };
+
+  const submit = async () => {
 
     try {
-      await createChannel({
-        workspaceId,
-        channelName,
-        description,
-        createdBy,
-      });
 
-      alert("Channel created successfully!");
+      const payload = {
+        ...formData,
+        createdBy: user._id,
+      };
+
+      if (channel?._id) {
+
+        await updateChannel(
+          channel._id,
+          payload
+        );
+
+        alert("Channel updated successfully");
+
+      } else {
+
+        await createChannel(payload);
+
+        alert("Channel created successfully");
+
+      }
 
       fetchChannels();
 
       onClose();
-    } catch (error) {
-      console.error(error);
-      alert("Failed to create channel");
+
+    } catch (err) {
+
+      console.log(err);
+
+      alert("Operation Failed");
+
     }
+
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
 
-      <div className="bg-white w-[500px] rounded-xl p-6">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
 
-        <h2 className="text-2xl font-bold mb-6">
-          Create Channel
+      <div className="bg-white rounded-xl shadow-xl w-[550px] p-8">
+
+        <h2 className="text-3xl font-bold text-center mb-8">
+
+          {channel
+            ? "Edit Channel"
+            : "Create Channel"}
+
         </h2>
 
-        <form onSubmit={handleSubmit}>
+        {/* Workspace */}
+
+        <div className="mb-5">
+
+          <label className="block font-semibold mb-2">
+
+            Workspace
+
+          </label>
+
+          <select
+            name="workspaceId"
+            value={formData.workspaceId}
+            onChange={handleChange}
+            className="border rounded-lg p-3 w-full"
+          >
+
+            <option value="">
+              Select Workspace
+            </option>
+
+            {workspaces.map((workspace) => (
+
+              <option
+                key={workspace._id}
+                value={workspace._id}
+              >
+
+                {workspace.workspaceName}
+
+              </option>
+
+            ))}
+
+          </select>
+
+        </div>
+
+        {/* Channel Name */}
+
+        <div className="mb-5">
+
+          <label className="block font-semibold mb-2">
+
+            Channel Name
+
+          </label>
 
           <input
             type="text"
-            placeholder="Channel Name"
-            value={channelName}
-            onChange={(e) => setChannelName(e.target.value)}
-            className="w-full border rounded-lg p-3 mb-4"
-            required
+            name="channelName"
+            value={formData.channelName}
+            onChange={handleChange}
+            placeholder="Enter Channel Name"
+            className="border rounded-lg p-3 w-full"
           />
+
+        </div>
+
+        {/* Description */}
+
+        <div className="mb-8">
+
+          <label className="block font-semibold mb-2">
+
+            Description
+
+          </label>
 
           <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full border rounded-lg p-3 mb-4"
+            rows={4}
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Enter Description"
+            className="border rounded-lg p-3 w-full"
           />
 
-          <div className="flex justify-end gap-3">
+        </div>
 
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-300 px-4 py-2 rounded-lg"
-            >
-              Cancel
-            </button>
+        {/* Buttons */}
 
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-5 py-2 rounded-lg"
-            >
-              Create
-            </button>
+        <div className="flex justify-end gap-4">
 
-          </div>
+          <button
+            onClick={onClose}
+            className="border border-gray-400 px-6 py-2 rounded-lg hover:bg-gray-100"
+          >
 
-        </form>
+            Cancel
+
+          </button>
+
+          <button
+            onClick={submit}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+          >
+
+            {channel
+              ? "Update Channel"
+              : "Create Channel"}
+
+          </button>
+
+        </div>
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default ChannelModal;

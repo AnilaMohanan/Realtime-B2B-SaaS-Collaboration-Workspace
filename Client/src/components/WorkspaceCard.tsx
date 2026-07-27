@@ -11,6 +11,7 @@ import { deleteWorkspace } from "../services/workspaceApi";
 import DeleteWorkspaceModal from "./DeleteWorkspaceModal";
 import { useState } from "react";
 import WorkspaceModal from "./WorkspaceModal";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   workspace: Workspace;
@@ -18,13 +19,13 @@ interface Props {
   
 }
 
-
-
-
+ const navigate = useNavigate();
 const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
   const [showDelete, setShowDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const removeWorkspace = async () => {
+   
+
   if (!workspace._id) return;
 
   try {
@@ -77,7 +78,9 @@ const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
 
       <div className="flex justify-between mt-6">
 
-        <button className="text-blue-600 flex items-center gap-2">
+        <button  onClick={() =>
+    navigate(`/workspaces/${workspace._id}`)
+  } className="text-blue-600 flex items-center gap-2">
 
           <FaArrowRight />
 
