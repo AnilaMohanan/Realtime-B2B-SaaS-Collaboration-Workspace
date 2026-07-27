@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 import authroutes from "./routes/authroutes";
 import workspaceRoutes from "./routes/workspaceroutes";
 import userRoutes from "./routes/userRoutes";
+import messageRoutes from "./routes/messageroutes";
+import notificationRoutes from "./routes/notificationroutes";
 import dashboardRoutes from "./routes/dashboardroutes";
 
 const app = express();
@@ -19,6 +21,8 @@ app.use(cookieParser());
 app.use("/api/auth",authroutes);
 app.use("/api/workspaces", workspaceRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/notifications", notificationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (_req, res) => {
