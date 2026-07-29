@@ -124,30 +124,7 @@ const WorkspacePage = () => {
         />
       )}
 
-      <div className="grid grid-cols-3 gap-6 mt-10">
-
-        <StatsCard
-          title="Total Workspaces"
-          value={stats.totalWorkspaces}
-          icon={<FaBuilding />}
-          color="bg-blue-500"
-        />
-
-        <StatsCard
-          title="Members"
-          value={stats.totalMembers}
-          icon={<FaUsers />}
-          color="bg-green-500"
-        />
-
-        <StatsCard
-          title="Channels"
-          value={stats.totalChannels}
-          icon={<FaComments />}
-          color="bg-purple-500"
-        />
-
-      </div>
+     
 
       <h2 className="text-2xl font-bold mt-12 mb-6">
 

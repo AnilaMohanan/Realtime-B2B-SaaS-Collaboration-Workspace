@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   createChannel,
   updateChannel,
 } from "../services/channelApi";
 
-import { getAllWorkspaces } from "../services/workspaceApi";
+//import { getAllWorkspaces } from "../services/workspaceApi";
 
 interface Props {
   fetchChannels: () => void;
   onClose: () => void;
+  workspaceId: string;
   channel?: any;
 }
 
 const ChannelModal = ({
   fetchChannels,
   onClose,
+   workspaceId,
   channel,
 }: Props) => {
 
@@ -23,31 +25,16 @@ const ChannelModal = ({
     localStorage.getItem("user") || "{}"
   );
 
-  const [workspaces, setWorkspaces] = useState<any[]>([]);
+ // const [workspaces, setWorkspaces] = useState<any[]>([]);
 
-  const [formData, setFormData] = useState({
-    workspaceId: channel?.workspaceId?._id || "",
-    channelName: channel?.channelName || "",
-    description: channel?.description || "",
-  });
+ const [formData, setFormData] = useState({
+  workspaceId,
+  channelName: channel?.channelName || "",
+  description: channel?.description || "",
+});
 
-  useEffect(() => {
-    fetchWorkspaces();
-  }, []);
+  
 
-  const fetchWorkspaces = async () => {
-    try {
-
-      const res = await getAllWorkspaces();
-
-      setWorkspaces(res.data.data);
-
-    } catch (err) {
-
-      console.log(err);
-
-    }
-  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -120,41 +107,7 @@ const ChannelModal = ({
 
         {/* Workspace */}
 
-        <div className="mb-5">
-
-          <label className="block font-semibold mb-2">
-
-            Workspace
-
-          </label>
-
-          <select
-            name="workspaceId"
-            value={formData.workspaceId}
-            onChange={handleChange}
-            className="border rounded-lg p-3 w-full"
-          >
-
-            <option value="">
-              Select Workspace
-            </option>
-
-            {workspaces.map((workspace) => (
-
-              <option
-                key={workspace._id}
-                value={workspace._id}
-              >
-
-                {workspace.workspaceName}
-
-              </option>
-
-            ))}
-
-          </select>
-
-        </div>
+ 
 
         {/* Channel Name */}
 

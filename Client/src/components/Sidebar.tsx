@@ -21,11 +21,7 @@ const Sidebar = () => {
       icon: <FaUsers />,
       path: "/workspaces",
     },
-    {
-      name: "Channels",
-      icon: <FaComments />,
-      path: "/channels",
-    },
+   
     {
       name: "Documents",
       icon: <FaFileAlt />,

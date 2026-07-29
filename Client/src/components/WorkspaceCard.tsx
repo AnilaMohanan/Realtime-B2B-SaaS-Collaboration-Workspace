@@ -19,8 +19,10 @@ interface Props {
   
 }
 
- const navigate = useNavigate();
+ 
 const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
+  
+  const navigate = useNavigate();
   const [showDelete, setShowDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const removeWorkspace = async () => {
@@ -78,16 +80,13 @@ const WorkspaceCard = ({ workspace,fetchWorkspaces }: Props) => {
 
       <div className="flex justify-between mt-6">
 
-        <button  onClick={() =>
-    navigate(`/workspaces/${workspace._id}`)
-  } className="text-blue-600 flex items-center gap-2">
-
-          <FaArrowRight />
-
-          Open
-
-        </button>
-
+<button
+  onClick={() => navigate(`/workspaces/${workspace._id}`)}
+  className="border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-5 py-2 rounded-lg flex items-center gap-2 transition-all duration-300"
+>
+  Open Workspace
+  <FaArrowRight />
+</button>
         <div className="flex gap-4">
 
 <button onClick={() => setOpenEdit(true)}>

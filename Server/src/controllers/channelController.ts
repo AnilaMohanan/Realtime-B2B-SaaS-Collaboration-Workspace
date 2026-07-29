@@ -127,3 +127,33 @@ export const deleteChannel = async (
     });
   }
 };
+
+// Get Channels by Workspace
+export const getChannelsByWorkspace = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { workspaceId } = req.params;
+
+    const channels = await Channel.find({
+      workspaceId,
+    })
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      total: channels.length,
+      data: channels,
+    });
+
+  } catch (error) {
+    console.error("Get Channels Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};

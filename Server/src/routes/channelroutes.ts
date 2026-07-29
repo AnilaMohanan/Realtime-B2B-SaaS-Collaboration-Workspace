@@ -6,6 +6,7 @@ import {
   getChannelById,
   updateChannel,
   deleteChannel,
+  getChannelsByWorkspace
 } from "../controllers/channelController";
 
 const router = express.Router();
@@ -13,6 +14,8 @@ const router = express.Router();
 router.post("/", createChannel);
 
 router.get("/", getAllChannels);
+
+router.get("/workspace/:workspaceId", getChannelsByWorkspace);
 
 router.get("/:id", getChannelById);
 
