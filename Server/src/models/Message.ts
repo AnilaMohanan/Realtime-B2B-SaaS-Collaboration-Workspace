@@ -2,31 +2,28 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMessage extends Document {
   sender: mongoose.Types.ObjectId;
-  receiver: mongoose.Types.ObjectId;
+  channelId: mongoose.Types.ObjectId;
   message: string;
-  isRead: boolean;
 }
 
-const messageSchema = new Schema<IMessage>(
+const MessageSchema = new Schema(
   {
     sender: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    receiver: {
+
+    channelId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Channel",
       required: true,
     },
+
     message: {
       type: String,
       required: true,
       trim: true,
-    },
-    isRead: {
-      type: Boolean,
-      default: false,
     },
   },
   {
@@ -34,4 +31,7 @@ const messageSchema = new Schema<IMessage>(
   }
 );
 
-export default mongoose.model<IMessage>("Message", messageSchema);
+export default mongoose.model<IMessage>(
+  "Message",
+  MessageSchema
+);

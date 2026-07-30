@@ -14,5 +14,5 @@ router.post("/", authMiddleware, sendMessage);
 router.get("/:receiverId", authMiddleware, getMessages);
 router.put("/:messageId", authMiddleware, editMessage);
 router.delete("/:messageId", authMiddleware, deleteMessage);
-
+router.get("/channel/:channelId", getMessages);
 export default router;

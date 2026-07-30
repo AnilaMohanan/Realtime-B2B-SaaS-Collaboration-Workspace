@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Channel from "./pages/Channel";
 import WorkspacePage from "./pages/WorkspacePage";
 import WorkspaceDetails from "./pages/WorkspaceDetails";
+import Chat from "./pages/Chat";
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/workspaces" element={<WorkspacePage />} />
         <Route path="/channels" element={<Channel />} />
-        <Route path="/workspaces/:workspaceId" element={<WorkspaceDetails />}
-/>
+        <Route path="/workspaces/:workspaceId" element={<WorkspaceDetails />}/>
+        <Route path="/chat/:channelId" element={<Chat />}/>
+
       </Routes>
     </BrowserRouter>
   );

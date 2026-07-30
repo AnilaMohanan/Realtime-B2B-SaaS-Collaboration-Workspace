@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   FaEdit,
@@ -23,7 +24,7 @@ const ChannelCard = ({
 }: Props) => {
 
   const [open, setOpen] = useState(false);
-
+const navigate = useNavigate();
   const handleDelete = async () => {
 
     const confirmDelete = window.confirm(
@@ -124,7 +125,18 @@ const ChannelCard = ({
           </p>
 
         </div>
+<button
+onClick={() =>
+navigate(`/chat/${channel._id}`)
+}
+className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+>
 
+<FaComments />
+
+Open Chat
+
+</button>
         {/* Workspace */}
 
         <div className="flex items-center gap-2 mt-6">

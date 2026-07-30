@@ -42,7 +42,7 @@ const Register = () => {
 
       alert(res.data.message || "Registration Successful");
 
-      navigate("/login");
+      navigate("/");
 
     } catch (error: any) {
 

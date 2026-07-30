@@ -32,6 +32,11 @@ const Sidebar = () => {
       icon: <FaCog />,
       path: "/settings",
     },
+       {
+      name: "LogOut",
+      icon: <FaCog />,
+      path: "/",
+    },
   ];
 
   return (

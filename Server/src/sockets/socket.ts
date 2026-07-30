@@ -1,64 +1,170 @@
 import { Server, Socket } from "socket.io";
+import http from "http";
 import Message from "../models/Message";
 
-export const initializeSocket = (io: Server) => {
+const onlineUsers = new Map<string, string>();
+
+export const initializeSocket = (
+  server: http.Server
+) => {
+
+  const io = new Server(server, {
+
+    cors: {
+      origin: "http://localhost:5173",
+      credentials: true,
+    },
+
+  });
+
   io.on("connection", (socket: Socket) => {
+
     console.log("User Connected:", socket.id);
 
-    // Join Room
-    socket.on("joinRoom", (roomId: string) => {
-      socket.join(roomId);
-      console.log(`${socket.id} joined room ${roomId}`);
+    /**
+     * User comes online
+     */
+    socket.on("join", (userId: string) => {
+
+      onlineUsers.set(userId, socket.id);
+
+      io.emit(
+        "onlineUsers",
+        Array.from(onlineUsers.keys())
+      );
+
+      console.log(userId, "joined");
+
     });
 
-    // Send Message
-    socket.on("sendMessage", async (...args) => {
-      console.log("Args:", args);
+    /**
+     * Join Workspace
+     */
 
-      try {
-        const data = args[0];
+    socket.on(
+      "joinWorkspace",
+      (workspaceId: string) => {
 
-        const messageData =
-          typeof data === "string" ? JSON.parse(data) : data;
+        socket.join(workspaceId);
 
-        console.log("Received data:", messageData);
-        console.log("Sender:", messageData.sender);
-        console.log("Receiver:", messageData.receiver);
-        console.log("Message:", messageData.message);
+        console.log(
+          "Joined Workspace:",
+          workspaceId
+        );
 
-        const newMessage = new Message({
-          sender: messageData.sender,
-          receiver: messageData.receiver,
-          message: messageData.message,
+      }
+    );
+
+    /**
+     * Join Channel
+     */
+
+    socket.on(
+      "joinChannel",
+      (channelId: string) => {
+
+        socket.join(channelId);
+
+        console.log(
+          "Joined Channel:",
+          channelId
+        );
+
+      }
+    );
+socket.on(
+  "sendMessage",
+  async (data) => {
+
+    try {
+
+      const message =
+        await Message.create({
+
+          sender: data.sender,
+
+          channelId: data.channelId,
+
+          message: data.message,
+
         });
 
-        console.log("Before save:", newMessage);
+      const populated =
+        await Message.findById(message._id)
+          .populate(
+            "sender",
+            "name email"
+          );
 
-        await newMessage.save();
+      io.to(data.channelId).emit(
+        "receiveMessage",
+        populated
+      );
 
-        io.to(messageData.roomId).emit("receiveMessage", newMessage);
+    } catch (err) {
 
-        console.log("Message saved:", newMessage);
-      } catch (error) {
-        console.error("Error saving message:", error);
+      console.log(err);
+
+    }
+
+  }
+);
+
+socket.on(
+  "typing",
+  ({ channelId, userName }) => {
+
+    socket.to(channelId).emit(
+      "userTyping",
+      {
+        userName,
       }
-    });
+    );
 
-    //Typing
+  }
+);
+socket.on(
+  "stopTyping",
+  (channelId) => {
 
-    socket.on("typing", (roomId: string) => {
-  console.log("Typing event received:", roomId);
-  socket.to(roomId).emit("typing");
-});
-// stop typing
-   socket.on("stopTyping", (roomId: string) => {
-  console.log("Stop typing event received:", roomId);
-  socket.to(roomId).emit("stopTyping");
-});
+    socket.to(channelId).emit(
+      "userStoppedTyping"
+    );
 
-    // Disconnect
+  }
+);
+    /**
+     * Disconnect
+     */
+
     socket.on("disconnect", () => {
-      console.log("User Disconnected:", socket.id);
+
+      console.log(
+        "User Disconnected:",
+        socket.id
+      );
+
+      for (const [userId, id] of onlineUsers) {
+
+        if (id === socket.id) {
+
+          onlineUsers.delete(userId);
+
+          break;
+
+        }
+
+      }
+
+      io.emit(
+        "onlineUsers",
+        Array.from(onlineUsers.keys())
+      );
+
     });
+
   });
+
+  return io;
+
 };
