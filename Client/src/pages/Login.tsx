@@ -44,9 +44,9 @@ const Login = () => {
         JSON.stringify(res.data.user)
       );
 
-      alert("Login Successful");
+     // alert("Login Successful");
 
-      navigate("/workspaces");
+      navigate("/Dashboard");
 
     } catch (err: any) {
 

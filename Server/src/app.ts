@@ -11,6 +11,7 @@ import notificationRoutes from "./routes/notificationroutes";
 import dashboardRoutes from "./routes/dashboardroutes";
 import channelRoutes from "./routes/channelroutes";
 import workspaceMemberRoutes from "./routes/workspaceMemberRoutes";
+import documentRoutes from "./routes/documentRoutes";
 const app = express();
 
 app.use(cors());
@@ -27,6 +28,9 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/channels", channelRoutes);
 app.use("/api/workspace-members",workspaceMemberRoutes);
+app.use("/api/documents", documentRoutes);
+
+
 
 app.get("/", (_req, res) => {
   res.status(200).json({
