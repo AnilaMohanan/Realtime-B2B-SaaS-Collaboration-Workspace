@@ -8,7 +8,15 @@ import ChannelCard from "../components/ChannelCard";
 
 import MemberModal from "../components/MemberModal";
 import ChannelModal from "../components/ChannelModal";
+import DocumentCard from "../components/DocumentCard";
 
+import DocumentModal from "../components/DocumentModal";
+import {getDocumentsByWorkspace, 
+} from "../services/documentApi";
+
+import {
+  FaFileAlt,
+} from "react-icons/fa";
 import {
   FaUsers,
   FaComments,
@@ -41,7 +49,14 @@ const [workspace, setWorkspace] = useState<any>({});
 const [members, setMembers] = useState<any[]>([]);
 
 const [channels, setChannels] = useState<any[]>([]);
+const [documents, setDocuments] =
+useState<any[]>([]);
 
+const [openDocumentModal, setOpenDocumentModal] =
+useState(false);
+
+const [selectedDocument, setSelectedDocument] =
+useState<any>(null);
 const [openMemberModal, setOpenMemberModal] =
 useState(false);
 
@@ -104,7 +119,24 @@ console.log(err);
 }
 
 };
+const fetchDocuments = async () => {
 
+  try {
+
+    const res =
+      await getDocumentsByWorkspace(
+        workspaceId!
+      );
+
+    setDocuments(res.data.data);
+
+  } catch (err) {
+
+    console.log(err);
+
+  }
+
+};
 useEffect(() => {
 
 fetchWorkspace();
@@ -113,6 +145,7 @@ fetchMembers();
 
 fetchChannels();
 
+fetchDocuments();
 }, []);
 return (
 
@@ -387,7 +420,115 @@ Invite Code
             )}
 
        
+      {/* Document  */}
+<div className="mt-8 bg-white rounded-2xl shadow-lg">
 
+  {/* Header */}
+
+  <div className="flex justify-between items-center p-6 border-b">
+
+    <div>
+
+      <h2 className="text-2xl font-bold flex items-center gap-2">
+
+        <FaFileAlt className="text-blue-600"/>
+
+        Documents
+
+      </h2>
+
+      <p className="text-gray-500">
+
+        {documents.length} Documents
+
+      </p>
+
+    </div>
+
+    <button
+
+      onClick={() => {
+
+        setSelectedDocument(null);
+
+        setOpenDocumentModal(true);
+
+      }}
+
+      className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg"
+
+    >
+
+      + New Document
+
+    </button>
+
+  </div>
+
+  {/* Search */}
+
+  <div className="p-5">
+
+    <input
+
+      type="text"
+
+      placeholder="Search Documents..."
+
+      className="w-full border rounded-lg px-4 py-3"
+
+    />
+
+  </div>
+
+  {/* Documents */}
+
+  <div className="p-5">
+
+    {documents.length === 0 ? (
+
+      <div className="text-center py-10">
+
+        <FaFileAlt
+
+          size={55}
+
+          className="mx-auto text-gray-300"
+
+        />
+
+        <h2 className="text-xl font-semibold mt-5">
+
+          No Documents Found
+
+        </h2>
+
+      </div>
+
+    ) : (
+
+      <div className="space-y-5">
+
+        {documents.map((document:any)=>(
+
+     <DocumentCard
+  document={document}
+  fetchDocuments={fetchDocuments}
+  onEdit={() => {
+    setSelectedDocument(document);
+    setOpenDocumentModal(true);
+  }}
+/>
+
+        ))}
+
+      </div>
+
+    )}
+
+  </div>
+
+</div>
       {/* Member Modal */}
 
       {openMemberModal && (
@@ -416,6 +557,28 @@ Invite Code
         />
 
       )}
+ {/* Document Modal */}
+
+
+      {openDocumentModal && (
+
+  <DocumentModal
+
+    workspaceId={workspaceId!}
+
+    document={selectedDocument}
+
+    fetchDocuments={fetchDocuments}
+
+    onClose={() =>
+
+      setOpenDocumentModal(false)
+
+    }
+
+  />
+
+)}
 </div>   {/* End Right Panel */}
 
 </div>   {/* End grid */}
