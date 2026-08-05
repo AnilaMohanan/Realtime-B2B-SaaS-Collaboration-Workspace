@@ -22,11 +22,7 @@ const Sidebar = () => {
       path: "/workspaces",
     },
    
-    {
-      name: "Documents",
-      icon: <FaFileAlt />,
-      path: "/documents",
-    },
+   
     {
       name: "Settings",
       icon: <FaCog />,
