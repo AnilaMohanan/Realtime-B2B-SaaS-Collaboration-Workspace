@@ -10,4 +10,7 @@ export const registerUser = (data: any) =>
 export const loginUser = (data: any) =>
   API.post("/login", data);
 
+export const logoutUser = (refreshToken: string) =>
+  API.post("/logout", { refreshToken });
+
 export default API;

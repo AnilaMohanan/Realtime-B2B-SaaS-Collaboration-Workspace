@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";
 import StatsCard from "../components/StatsCard";
 
@@ -24,7 +24,7 @@ import {
 } from "../services/channelApi";
 
 const Dashboard = () => {
-
+const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
   const [stats, setStats] = useState({
@@ -79,7 +79,11 @@ const Dashboard = () => {
   useEffect(() => {
 
     fetchDashboard();
+ const token = localStorage.getItem("token");
 
+  if (!token) {
+    navigate("/");
+  }
   }, []);
 
   return (

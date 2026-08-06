@@ -100,6 +100,12 @@ await RefreshToken.create({
 };
 export const logout = async (req: Request, res: Response) => {
   try {
+    const { refreshToken } = req.body;
+
+    if (refreshToken) {
+      await RefreshToken.deleteOne({ refreshToken });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Logout successful",
