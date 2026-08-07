@@ -131,30 +131,7 @@ const navigate = useNavigate();
 
       {/* Statistics */}
 
-      <div className="grid grid-cols-3 gap-8 mt-10">
 
-        <StatsCard
-          title="Total Workspaces"
-          value={stats.totalWorkspaces}
-          icon={<FaBuilding />}
-          color="bg-blue-600"
-        />
-
-        <StatsCard
-          title="Total Members"
-          value={stats.totalMembers}
-          icon={<FaUsers />}
-          color="bg-green-600"
-        />
-
-        <StatsCard
-          title="Total Channels"
-          value={stats.totalChannels}
-          icon={<FaComments />}
-          color="bg-purple-600"
-        />
-
-      </div>
 
 
             {/* Main Content */}

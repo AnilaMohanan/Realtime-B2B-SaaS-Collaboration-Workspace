@@ -88,7 +88,7 @@ const Login = () => {
           </p>
 
           <img
-            src="https://undraw.co/api/illustrations/undraw_login_re_4vu2.svg"
+            src="https://cdn-icons-png.flaticon.com/512/295/295128.png"
             className="w-80 mt-10"
             alt="Login"
           />

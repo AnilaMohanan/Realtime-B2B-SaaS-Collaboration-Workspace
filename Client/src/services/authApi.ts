@@ -9,8 +9,19 @@ export const registerUser = (data: any) =>
 
 export const loginUser = (data: any) =>
   API.post("/login", data);
+console.log(localStorage.getItem("token"));
+export const logoutUser = () => {
+  const token = localStorage.getItem("token");
 
-export const logoutUser = (refreshToken: string) =>
-  API.post("/logout", { refreshToken });
+  return API.post(
+    "/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
 
 export default API;

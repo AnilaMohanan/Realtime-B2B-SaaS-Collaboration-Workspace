@@ -88,7 +88,7 @@ const Register = () => {
           </p>
 
           <img
-            src="https://undraw.co/api/illustrations/undraw_team_collaboration_re_ow29.svg"
+            src="https://cdn-icons-png.flaticon.com/512/10423/10423409.png"
             alt="Team"
             className="w-80 mt-10"
           />
