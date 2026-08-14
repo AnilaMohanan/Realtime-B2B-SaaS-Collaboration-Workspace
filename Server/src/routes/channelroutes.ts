@@ -1,26 +1,31 @@
 import express from "express";
-
 import {
   createChannel,
   getAllChannels,
+  getChannelsByWorkspace,
   getChannelById,
   updateChannel,
   deleteChannel,
-  getChannelsByWorkspace
 } from "../controllers/channelController";
+
+import authMiddleware from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.post("/", createChannel);
+router.post("/", authMiddleware, createChannel);
 
-router.get("/", getAllChannels);
+router.get("/", authMiddleware, getAllChannels);
 
-router.get("/workspace/:workspaceId", getChannelsByWorkspace);
+router.get(
+  "/workspace/:workspaceId",
+  authMiddleware,
+  getChannelsByWorkspace
+);
 
-router.get("/:id", getChannelById);
+router.get("/:id", authMiddleware, getChannelById);
 
-router.put("/:id", updateChannel);
+router.put("/:id", authMiddleware, updateChannel);
 
-router.delete("/:id", deleteChannel);
+router.delete("/:id", authMiddleware, deleteChannel);
 
 export default router;

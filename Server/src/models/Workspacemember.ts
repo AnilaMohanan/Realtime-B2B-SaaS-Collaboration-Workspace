@@ -31,6 +31,12 @@ const WorkspaceMemberSchema = new Schema<IWorkspaceMember>({
     default: Date.now,
   },
 });
+// Prevent the same user from being added twice
+// to the same workspace
+WorkspaceMemberSchema.index(
+  { workspaceId: 1, userId: 1 },
+  { unique: true }
+);
 
 export default mongoose.model<IWorkspaceMember>(
   "WorkspaceMember",

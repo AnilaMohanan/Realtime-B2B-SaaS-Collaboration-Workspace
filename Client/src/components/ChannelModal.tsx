@@ -5,8 +5,6 @@ import {
   updateChannel,
 } from "../services/channelApi";
 
-//import { getAllWorkspaces } from "../services/workspaceApi";
-
 interface Props {
   fetchChannels: () => void;
   onClose: () => void;
@@ -17,106 +15,86 @@ interface Props {
 const ChannelModal = ({
   fetchChannels,
   onClose,
-   workspaceId,
+  workspaceId,
   channel,
 }: Props) => {
-
-  const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  );
-
- // const [workspaces, setWorkspaces] = useState<any[]>([]);
-
- const [formData, setFormData] = useState({
-  workspaceId,
-  channelName: channel?.channelName || "",
-  description: channel?.description || "",
-});
-
-  
-
+  const [formData, setFormData] = useState({
+    workspaceId: workspaceId,
+    channelName: channel?.channelName || "",
+    description: channel?.description || "",
+  });
 
   const handleChange = (
     e: React.ChangeEvent<
-      HTMLInputElement |
-      HTMLTextAreaElement |
-      HTMLSelectElement
+      HTMLInputElement | HTMLTextAreaElement
     >
   ) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-
   };
 
   const submit = async () => {
-
     try {
+      if (!formData.channelName.trim()) {
+        alert("Please enter channel name");
+        return;
+      }
 
       const payload = {
-        ...formData,
-        createdBy: user._id,
+        workspaceId: formData.workspaceId,
+        channelName: formData.channelName,
+        description: formData.description,
       };
 
       if (channel?._id) {
-
-        await updateChannel(
-          channel._id,
-          payload
-        );
+        await updateChannel(channel._id, payload);
 
         alert("Channel updated successfully");
-
       } else {
-
         await createChannel(payload);
 
         alert("Channel created successfully");
-
       }
 
       fetchChannels();
-
       onClose();
 
-    } catch (err) {
+    } catch (error: any) {
+      console.error("Channel operation error:", error);
 
-      console.log(err);
-
-      alert("Operation Failed");
-
+      if (error.response?.status === 403) {
+        alert(
+          error.response?.data?.message ||
+          "Only workspace admins can create channels."
+        );
+      } else if (error.response?.status === 401) {
+        alert("Please login again.");
+      } else {
+        alert(
+          error.response?.data?.message ||
+          "Operation failed."
+        );
+      }
     }
-
   };
 
   return (
-
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
 
       <div className="bg-white rounded-xl shadow-xl w-[550px] p-8">
 
         <h2 className="text-3xl font-bold text-center mb-8">
-
-          {channel
-            ? "Edit Channel"
-            : "Create Channel"}
-
+          {channel ? "Edit Channel" : "Create Channel"}
         </h2>
-
-        {/* Workspace */}
-
- 
 
         {/* Channel Name */}
 
         <div className="mb-5">
 
           <label className="block font-semibold mb-2">
-
             Channel Name
-
           </label>
 
           <input
@@ -135,9 +113,7 @@ const ChannelModal = ({
         <div className="mb-8">
 
           <label className="block font-semibold mb-2">
-
             Description
-
           </label>
 
           <textarea
@@ -159,20 +135,16 @@ const ChannelModal = ({
             onClick={onClose}
             className="border border-gray-400 px-6 py-2 rounded-lg hover:bg-gray-100"
           >
-
             Cancel
-
           </button>
 
           <button
             onClick={submit}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
           >
-
             {channel
               ? "Update Channel"
               : "Create Channel"}
-
           </button>
 
         </div>
@@ -180,9 +152,7 @@ const ChannelModal = ({
       </div>
 
     </div>
-
   );
-
 };
 
 export default ChannelModal;

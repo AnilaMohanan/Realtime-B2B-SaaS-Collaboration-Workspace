@@ -8,13 +8,49 @@ export const addMember = async (
   res: Response
 ) => {
   try {
-    const member = await WorkspaceMember.create(req.body);
+    const { workspaceId, userId, role } = req.body;
+
+    const loggedInUserId = (req as any).user.id;
+
+    // Check whether logged-in user is Admin
+    const admin = await WorkspaceMember.findOne({
+      workspaceId,
+      userId: loggedInUserId,
+      role: "Admin",
+    });
+
+    if (!admin) {
+      return res.status(403).json({
+        success: false,
+        message: "Only workspace admins can add members",
+      });
+    }
+
+    // Check whether member already exists
+    const existingMember = await WorkspaceMember.findOne({
+      workspaceId,
+      userId,
+    });
+
+    if (existingMember) {
+      return res.status(400).json({
+        success: false,
+        message: "User is already a workspace member",
+      });
+    }
+
+    const member = await WorkspaceMember.create({
+      workspaceId,
+      userId,
+      role: role || "Member",
+    });
 
     res.status(201).json({
       success: true,
       message: "Member added successfully",
       data: member,
     });
+
   } catch (error) {
     console.error(error);
 
@@ -58,10 +94,36 @@ export const updateMember = async (
   res: Response
 ) => {
   try {
-    const member =
+    const loggedInUserId = (req as any).user.id;
+
+    const member = await WorkspaceMember.findById(req.params.id);
+
+    if (!member) {
+      return res.status(404).json({
+        success: false,
+        message: "Member not found",
+      });
+    }
+
+    const admin = await WorkspaceMember.findOne({
+      workspaceId: member.workspaceId,
+      userId: loggedInUserId,
+      role: "Admin",
+    });
+
+    if (!admin) {
+      return res.status(403).json({
+        success: false,
+        message: "Only workspace admins can change member roles",
+      });
+    }
+
+    const updatedMember =
       await WorkspaceMember.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        {
+          role: req.body.role,
+        },
         {
           new: true,
         }
@@ -69,9 +131,10 @@ export const updateMember = async (
 
     res.json({
       success: true,
-      message: "Member updated successfully",
-      data: member,
+      message: "Member role updated successfully",
+      data: updatedMember,
     });
+
   } catch (error) {
     console.error(error);
 

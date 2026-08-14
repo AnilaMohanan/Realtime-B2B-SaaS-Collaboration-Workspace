@@ -4,6 +4,16 @@ const API = axios.create({
   baseURL: "http://localhost:5000/api/channels",
 });
 
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 export const getAllChannels = () => API.get("/");
 
 export const getChannelById = (id: string) =>
